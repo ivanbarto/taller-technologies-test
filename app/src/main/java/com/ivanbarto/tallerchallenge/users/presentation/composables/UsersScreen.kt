@@ -46,6 +46,18 @@ fun UsersScreen() {
         viewmodel.getUsers()
     }
 
+    LaunchedEffect(screenState.message) {
+        screenState.message?.let { message ->
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = message,
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = true
+                )
+            }
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = {
@@ -68,17 +80,12 @@ fun UsersScreen() {
                     is ScreenState.Idle<List<User>> -> {
                         items(screenState.data) { user ->
                             UserItem(user) {
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = user.toString(),
-                                        duration = SnackbarDuration.Short
-                                    )
-                                }
+                                viewmodel.onUserClick(user)
                             }
                         }
                     }
 
-                    ScreenState.Loading -> {
+                    is ScreenState.Loading -> {
                         item {
                             Box(
                                 modifier = Modifier.fillMaxWidth(),

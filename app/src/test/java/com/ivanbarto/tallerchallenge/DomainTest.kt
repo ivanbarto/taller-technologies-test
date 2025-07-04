@@ -31,7 +31,7 @@ class DomainTest : KoinTest {
         includes(getDomainModules())
     }
 
-    //isolated test koin context to check proper layer module
+    //isolated test koin context to check isloated layer module
     private val isolatedTestKoinContext = koinApplication {
         modules(testModules)
     }
